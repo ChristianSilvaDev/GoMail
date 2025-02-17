@@ -1,5 +1,5 @@
 run:
-	go run src/cmd/api.go
+	docker compose up -d
 
 build:
-	go build -o go-mail src/cmd/api.go
+	docker compose up -d --build
