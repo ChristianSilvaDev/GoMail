@@ -1,13 +1,11 @@
-package entity
+package dao
 
 import "github.com/ChristianSilvaDev/GoMail/src/internal/interfaces"
 
-type Mail struct {
-	*BaseEntity
+type MailCreateDAO struct {
 	Destination string `json:"destination"`
 	Subject     string `json:"subject"`
 	Body        string `json:"body"`
-	Status      string `json:"status"`
 }
 
-var _ interfaces.Entity = (*Mail)(nil)
+var _ interfaces.DAO = (*MailCreateDAO)(nil)
