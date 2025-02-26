@@ -1,13 +1,35 @@
 package entity
 
-import "github.com/ChristianSilvaDev/GoMail/src/internal/interfaces"
+import (
+	"github.com/google/uuid"
+	"time"
+)
+
+type MailStatus string
+
+const (
+	pending MailStatus = "Pending"
+	sent    MailStatus = "Sent"
+	failed  MailStatus = "Failed"
+)
+
 
 type Mail struct {
-	*BaseEntity
-	Destination string `json:"destination"`
-	Subject     string `json:"subject"`
-	Body        string `json:"body"`
-	Status      string `json:"status"`
+	ID          uuid.UUID  `gorm:"type:varchar(36);primary_key" json:"id"`
+	CreatedAt   time.Time  `gorm:"autoCreateTime" json:"createdAt"`
+	UpdatedAt   time.Time  `gorm:"autoUpdateTime" json:"updatedAt"`
+	Destination string     `gorm:"not null; not empty" json:"destination"`
+	Subject     string     `gorm:"not null; not empty" json:"subject"`
+	Body        string     `gorm:"not null; not empty" json:"body"`
+	Status      MailStatus `gorm:"not null;index" json:"status"`
 }
 
-var _ interfaces.Entity = (*Mail)(nil)
+func NewMail(Destination, Subject, Body string) *Mail {
+	return &Mail{
+		ID:          uuid.New(),
+		Destination: Destination,
+		Subject:     Subject,
+		Body:        Body,
+		Status:      pending,
+	}
+}

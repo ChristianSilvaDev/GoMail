@@ -1,14 +1,21 @@
 package repository
 
 import (
-	"github.com/ChristianSilvaDev/GoMail/src/internal/dao"
 	"github.com/ChristianSilvaDev/GoMail/src/internal/entity"
+	"github.com/ChristianSilvaDev/GoMail/src/internal/infra"
 )
 
 type MailRepository struct {
-	*BaseDynamoRepository[entity.Mail]
+	DB *infra.MySQLDatabase
 }
 
-func (r *MailRepository) Create(itemDao dao.MailCreateDAO) (*entity.Mail, error) {
-	return r.Create(itemDao)
+func (r *MailRepository) Create(mail *entity.Mail) error {
+	conn, err := r.DB.GetConnection()
+	if err != nil {
+		return err
+	}
+
+	conn.Create(mail)
+
+	return nil
 }

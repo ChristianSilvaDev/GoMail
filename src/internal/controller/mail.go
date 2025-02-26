@@ -1,11 +1,10 @@
 package controller
 
 import (
-	"net/http"
-
 	"github.com/ChristianSilvaDev/GoMail/src/internal/dto"
 	"github.com/ChristianSilvaDev/GoMail/src/internal/usecase"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type MailController struct {
@@ -13,17 +12,22 @@ type MailController struct {
 }
 
 func (c *MailController) RequestMail(ctx *gin.Context) {
-	var requestDTO dto.RequestMailDTO
+	var inputDTO dto.RequestMailDTO
 
-	if err := ctx.ShouldBindJSON(&requestDTO); err != nil {
+	if err := ctx.ShouldBindJSON(&inputDTO); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	mail, err := c.RequestMailUseCase.Execute(requestDTO)
+	mail, err := c.RequestMailUseCase.Execute(inputDTO)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"id": mail.ID})
+
+	ctx.JSON(http.StatusAccepted, dto.RequestMailResponseDTO{
+		ID:          mail.ID,
+		Destination: mail.Destination,
+		Subject:     mail.Subject,
+	})
 }

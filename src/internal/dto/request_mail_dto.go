@@ -1,22 +1,15 @@
 package dto
 
-import (
-	"github.com/ChristianSilvaDev/GoMail/src/internal/dao"
-	"github.com/ChristianSilvaDev/GoMail/src/internal/interfaces"
-)
+import "github.com/google/uuid"
 
 type RequestMailDTO struct {
-	Destination string `json:"destination"`
-	Subject     string `json:"subject"`
-	Body        string `json:"body"`
+	Destination string `json:"destination" binding:"required,email"`
+	Subject     string `json:"subject" binding:"required"`
+	Body        string `json:"body" binding:"required"`
 }
 
-func (dto *RequestMailDTO) ToDAO() *dao.MailCreateDAO {
-	return &dao.MailCreateDAO{
-		Destination: dto.Destination,
-		Subject:     dto.Subject,
-		Body:        dto.Body,
-	}
+type RequestMailResponseDTO struct {
+	ID          uuid.UUID `json:"id"`
+	Destination string    `json:"destination"`
+	Subject     string    `json:"subject"`
 }
-
-var _ interfaces.DTO = (*RequestMailDTO)(nil)
